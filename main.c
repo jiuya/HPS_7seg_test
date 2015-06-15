@@ -109,7 +109,7 @@ int main(int argc, char **argv)
 	while(1)
 	{
 		//SEG7_All_Number();
-		alt_write_word(h2p_lw_7seg_addr,0x1234);
+		alt_write_word(h2p_lw_7seg_addr,0x123456);
 	}
 	//pthread_join(id,NULL);
 	if( munmap( virtual_base, HW_REGS_SPAN ) != 0 ) {
