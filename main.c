@@ -74,7 +74,13 @@ int main(int argc, char **argv)
 	{
 		timer = time(NULL);
 		date = localtime(&timer);
-		outData = ((date->tm_hour << 16)&0xff0000) + ((date->tm_min << 8)&0xff00) + (date->tm_sec&0xff);
+		outData =
+			(((date->tm_hour / 10) << 20)&0xf00000) +
+			(((date->tm_hour % 10) << 16)&0xf0000) +
+			(((date->tm_min / 10) << 12)&0xf000) +
+			(((date->tm_min % 10) <<  8)&0xf00) +
+			((date->tm_sec / 10) << 4) +
+			(date->tm_sec % 10);
 		//SEG7_All_Number();
 		alt_write_word(h2p_lw_7seg_addr,outData);
 	}
