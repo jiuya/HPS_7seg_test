@@ -13,6 +13,7 @@
 #include "seg7.h"
 #include <stdbool.h>
 #include <pthread.h>
+#include <time.h>
 
 #define HW_REGS_BASE ( ALT_STM_OFST )
 #define HW_REGS_SPAN ( 0x04000000 )
@@ -40,6 +41,9 @@ void led_blink(void)
 
 int main(int argc, char **argv)
 {
+	time_t timer;
+	struct tm *date;
+	int outData;
 	pthread_t id;
 	int ret;
 	void *virtual_base;
@@ -68,8 +72,11 @@ int main(int argc, char **argv)
 	h2p_lw_7seg_addr=virtual_base + ( ( unsigned long  )( ALT_LWFPGASLVS_OFST + 0x0 ) & ( unsigned long)( HW_REGS_MASK ) );
 	while(1)
 	{
+		timer = time(NULL);
+		date = localtime(&timer);
+		outData = ((date->tm_hour << 16)&0xff0000) + ((date->tm_min << 8)&0xff00) + (date->tm_sec&0xff);
 		//SEG7_All_Number();
-		alt_write_word(h2p_lw_7seg_addr,0xABCDEF);
+		alt_write_word(h2p_lw_7seg_addr,outData);
 	}
 	//pthread_join(id,NULL);
 	if( munmap( virtual_base, HW_REGS_SPAN ) != 0 ) {
